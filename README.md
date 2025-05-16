@@ -1,6 +1,6 @@
 # terra-profile
 
-Automatically set the respective `AWS_PROFILE` before calling `terraform` or `terragrunt` based on an `account.hcl` file
+Automatically set the respective `AWS_PROFILE` before calling `terragrunt` based on an `account.hcl` file
 exporting a local profile name.
 
 Never accidentally plan or apply against the wrong account because you forgot to change the `AWS_PROFILE`.
@@ -10,7 +10,7 @@ Never accidentally plan or apply against the wrong account because you forgot to
 This CLI tool will search backwards within a directory and find the first `account.hcl` file and read the `account_name`
 from locals, for example:
 
-Having the following account.hcl file within your Terragrunt/Terraform project tree:
+Having the following account.hcl file within your Terragrunt project tree:
 
 ```bash
 locals {
