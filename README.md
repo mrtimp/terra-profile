@@ -10,6 +10,8 @@ Never accidentally plan or apply against the wrong account because you forgot to
 This CLI tool will search backwards within a directory and find the first `account.hcl` file and read the `account_name`
 from locals, for example:
 
+Having the following account.hcl file within your Terragrunt/Terraform project tree:
+
 ```bash
 locals {
   account_name   = "my-prod-account"
@@ -17,7 +19,13 @@ locals {
 }
 ```
 
-This would do the equivalent of:
+and executing:
+
+```bash
+terra-profile terragrunt run-all apply
+```
+
+would do the equivalent of:
 
 ```bash
 AWS_PROFILE=my-prod-account terragrunt run-all apply
