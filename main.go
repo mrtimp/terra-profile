@@ -31,8 +31,34 @@ type Options struct {
 
 var opts Options
 
+func findGitRoot(startDir string) (string, error) {
+	dir := startDir
+
+	for {
+		gitRootDir := filepath.Join(dir, ".git")
+
+		info, err := os.Stat(gitRootDir)
+		if err == nil && info.IsDir() {
+			return dir, nil
+		}
+
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			return "", fmt.Errorf(".git directory not found")
+		}
+
+		dir = parent
+	}
+}
+
 func findAccountHCLFile(startDir string) (string, error) {
 	dir := startDir
+
+	gitRootDir, err := findGitRoot(dir)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return "", nil
+	}
 
 	for {
 		path := filepath.Join(dir, opts.AccountFile)
@@ -41,6 +67,11 @@ func findAccountHCLFile(startDir string) (string, error) {
 		}
 
 		parent := filepath.Dir(dir)
+
+		if parent == gitRootDir {
+			log.Debugf("Breaking at Git root directory: %s", gitRootDir)
+			break
+		}
 
 		if parent == dir {
 			break
