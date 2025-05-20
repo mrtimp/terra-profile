@@ -22,10 +22,11 @@ type AccountConfig struct {
 }
 
 type Options struct {
-	Debug          bool   `short:"d" long:"debug" description:"Enable debug output"`
-	NonInteractive bool   `short:"n" long:"non-interactive" description:"Disable Terragrunt interactive mode"`
-	AccountFile    string `short:"a" long:"account" description:"Account file" default:"account.hcl"`
-	Cmd            struct {
+	Debug                bool   `short:"d" long:"debug" description:"Enable debug output"`
+	NonInteractive       bool   `short:"n" long:"non-interactive" description:"Disable Terragrunt interactive mode"`
+	DisableProviderCache bool   `short:"p" long:"disable-provider-cache" description:"Disable provider cache"`
+	AccountFile          string `short:"a" long:"account" description:"Account file" default:"account.hcl"`
+	Cmd                  struct {
 		Args []string `positional-arg-name:"CMD" required:"yes"`
 	} `positional-args:"yes" required:"yes"`
 }
@@ -81,7 +82,7 @@ func main() {
 	}
 
 	if opts.Debug {
-		log.Debugf("Setting envirnoment variable: AWS_PROFILE=%s\n", accountName)
+		log.Debugf("Setting environment variable: AWS_PROFILE=%s\n", accountName)
 	}
 
 	if opts.NonInteractive {
@@ -92,7 +93,19 @@ func main() {
 		}
 
 		if opts.Debug {
-			log.Debug("Setting envirnoment variable: TG_NON_INTERACTIVE=true\n")
+			log.Debug("Setting environment variable: TG_NON_INTERACTIVE=true\n")
+		}
+	}
+
+	if !opts.DisableProviderCache {
+		err = os.Setenv("TG_PROVIDER_CACHE", "true")
+		if err != nil {
+			log.Errorf("Error setting environment variable: %v\n", err)
+			return
+		}
+
+		if opts.Debug {
+			log.Debug("Setting environment variable: TG_PROVIDER_CACHE=true\n")
 		}
 	}
 
