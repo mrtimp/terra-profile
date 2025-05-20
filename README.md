@@ -5,6 +5,9 @@ exporting a local profile name.
 
 Never accidentally plan or apply against the wrong account because you forgot to change the `AWS_PROFILE`.
 
+By default, the --provider-cache option will be enabled, this is helpful by cutting down on storage when working on
+larger Terraform projects. You can disable this with the `--disable-provider-cache` option.
+
 ## Example usage
 
 This CLI tool will search backwards within a directory and find the first `account.hcl` file and read the `account_name`
@@ -22,11 +25,11 @@ locals {
 and executing:
 
 ```bash
-terra-profile terragrunt run-all apply
+terra-profile [--debug] [--non-interactive] [--disable-provider-cache] terragrunt run-all apply
 ```
 
 would do the equivalent of:
 
 ```bash
-AWS_PROFILE=my-prod-account terragrunt run-all apply
+AWS_PROFILE=my-prod-account terragrunt run-all [--provider-cache] [--non-interactive] apply
 ```
